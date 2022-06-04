@@ -1,0 +1,34 @@
+# https://taskfile.dev
+
+version: "3"
+
+vars:
+  targetbin: ~/bin
+  buildname: jsonpath
+
+tasks:
+  default:
+    cmds:
+      - echo "use 'task -l' to list tasks"
+    silent: true
+  install:
+    desc: copy build file to local bin
+    dir: .
+    preconditions:
+      - test -d {{.targetbin}}/
+    cmds:
+      - task: build
+      - cmd: rm {{.targetbin}}/{{.buildname}}
+        ignore_error: true
+      - cmd: cp dist/{{.buildname}}_{{OS}}_{{ARCH}}/{{.buildname}} {{.targetbin}}
+        ignore_error: true
+  build:
+    desc: build app
+    cmds:
+      - goreleaser release --snapshot --rm-dist
+
+  release:
+    dir: .
+    desc: release to github using goreleaser
+    cmds:
+      - goreleaser release --rm-dist

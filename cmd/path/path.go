@@ -10,22 +10,90 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-type document struct {
+// Path a path for a document and associated properties
+type Path struct {
+	Path     string
+	Contents string
+	Obj      interface{}
 }
 
-// SubNodesStrings get parts of document that match path
-func SubNodesStrings(path string, content string) (parts []string, err error) {
-	var node yaml.Node
-	node, err = ToYAMLNode(content)
+// NewPath create a new path and initialize it
+func NewPath(path string, contents string) *Path {
+	p := new(Path)
+	p.Contents = contents
+	p.Path = path
+
+	p.process()
+
+	return p
+}
+
+// process process a document using the jsonpath
+func (p *Path) process() (err error) {
+	parts, err := subNodesStrings(p.Path, p.Contents)
 	if err != nil {
 		return
 	}
-	p, err := yamlpath.NewPath(path)
+	p.Obj, err = fromStringArr(parts)
 	if err != nil {
 		return
 	}
 
-	actual, err := p.Find(&node)
+	return
+}
+
+// ToYAML get YAML subset based on jsonpath
+func (p *Path) ToYAML() (y string, err error) {
+	y, err = objToYAML(p.Obj)
+	if err != nil {
+		return
+	}
+	y = strings.TrimSpace(y)
+
+	return
+}
+
+// ToJSON get JSON subset based on jsonpath
+func (p *Path) ToJSON() (j string, err error) {
+	j, err = objToJSON(p.Obj)
+	if err != nil {
+		return
+	}
+	j = strings.TrimSpace(j)
+
+	return
+}
+
+// expandToMatch take interface and recursively update to reflect underlying structure
+func expandToMatch(i interface{}) interface{} {
+	switch x := i.(type) {
+	case map[interface{}]interface{}:
+		m2 := map[string]interface{}{}
+		for k, v := range x {
+			m2[k.(string)] = expandToMatch(v)
+		}
+		return m2
+	case []interface{}:
+		for i, v := range x {
+			x[i] = expandToMatch(v)
+		}
+	}
+	return i
+}
+
+// subNodesStrings get parts of document that match path
+func subNodesStrings(path string, content string) (parts []string, err error) {
+	var node yaml.Node
+	node, err = toYAMLNode(content)
+	if err != nil {
+		return
+	}
+	yamlPath, err := yamlpath.NewPath(path)
+	if err != nil {
+		return
+	}
+
+	actual, err := yamlPath.Find(&node)
 	for _, a := range actual {
 		var buf bytes.Buffer
 		e := yaml.NewEncoder(&buf)
@@ -39,11 +107,13 @@ func SubNodesStrings(path string, content string) (parts []string, err error) {
 	return
 }
 
+// isJSON test if string is JSON (not exact)
 func isJSON(content string) bool {
 	return strings.HasPrefix(content, "{") || strings.HasPrefix(content, "[")
 }
 
-func toYAML(parts []string) (y string, err error) {
+// foundPartsToYAML convert found sections to a list of strings
+func foundPartsToYAML(parts []string) (y string, err error) {
 	bytes, err := yaml.Marshal(&parts)
 	if err != nil {
 		return
@@ -54,20 +124,10 @@ func toYAML(parts []string) (y string, err error) {
 	return
 }
 
-func toJSON(parts []string) (j string, err error) {
-	bytes, err := json.MarshalIndent(&parts, "", "  ")
-	if err != nil {
-		return
-	}
-	j = string(bytes)
-	fmt.Println(j)
-
-	return
-}
-
-func ToYAMLNode(content string) (node yaml.Node, err error) {
+// toYAMLNode convert string to yaml node
+func toYAMLNode(content string) (node yaml.Node, err error) {
 	if isJSON(content) {
-		content, err = ToYAML(content)
+		content, err = contentToYAML(content)
 		if err != nil {
 			return
 		}
@@ -81,64 +141,101 @@ func ToYAMLNode(content string) (node yaml.Node, err error) {
 	return
 }
 
-func ToCompact(parts []string) string {
-	var output = []string{}
-
-	for _, p := range parts {
-		if !strings.Contains(p, "\n") {
-			output = append(output, `"`+p+`"`)
-		} else {
-			p = strings.ReplaceAll(p, "\n", "\\n")
-			output = append(output, `"`+p+`"`)
-		}
-	}
-
-	return fmt.Sprintf("[%s]", strings.Join(output, ", "))
-}
-
-func jsonToYaml(content string) (y string, err error) {
-	var bytes []byte
-
+// toObj convert incoming yaml or json to an interface matching the document
+func toObj(content string) (obj interface{}, err error) {
 	if isJSON(content) {
-		obj := make(map[string]interface{})
-		var objArr []map[string]interface{}
+		// var objArr []map[string]interface{}
 
 		e := json.NewDecoder(strings.NewReader(string(content)))
-		if strings.HasPrefix(content, "[") {
-			err = e.Decode(&objArr)
-			if err != nil {
-				return
-			}
-			bytes, err = yaml.Marshal(objArr)
-			if err != nil {
-				return
-			}
-			y = string(bytes)
-
-		} else {
-			err = e.Decode(&obj)
-			if err != nil {
-				return
-			}
-			bytes, err = yaml.Marshal(obj)
-			if err != nil {
-				return
-			}
-			y = string(bytes)
+		err = e.Decode(&obj)
+		if err != nil {
+			return
 		}
+		obj = expandToMatch(obj)
+	} else {
+		e := yaml.NewDecoder(strings.NewReader(string(content)))
+		err = e.Decode(&obj)
+		if err != nil {
+			return
+		}
+		obj = expandToMatch(obj)
 	}
+
 	return
 }
 
-func ToYAML(content string) (y string, err error) {
-	str := string(content)
-	str = strings.TrimSpace(str)
+// fromStringArr convert an array of sub-document parts to an interface
+func fromStringArr(parts []string) (obj []interface{}, err error) {
+	for _, part := range parts {
+		var o interface{}
+		o, err = toObj(part)
+		if err != nil {
+			return
+		}
+		obj = append(obj, o)
+	}
 
-	content, err = jsonToYaml(content)
+	return
+}
+
+// objToYAML convert an interface to YAML
+func objToYAML(obj interface{}) (j string, err error) {
+	var bytes []byte
+	bytes, err = yaml.Marshal(obj)
 	if err != nil {
 		return
 	}
-	y = string(content)
+	j = string(bytes)
+
+	return
+}
+
+// objToJSON convert an interface to JSON
+func objToJSON(obj interface{}) (j string, err error) {
+	var bytes []byte
+	bytes, err = json.MarshalIndent(obj, "", " ")
+	if err != nil {
+		return
+	}
+	j = string(bytes)
+
+	return
+}
+
+// contentToYAML convert content to YAML
+func contentToYAML(content string) (y string, err error) {
+	str := string(content)
+	str = strings.TrimSpace(str)
+
+	var obj interface{}
+
+	obj, err = toObj(content)
+	if err != nil {
+		return
+	}
+
+	var bytes []byte
+	bytes, err = yaml.Marshal(obj)
+	y = string(bytes)
+
+	return
+}
+
+// contentToYAML convert content to YAML
+func contentToJSON(content string) (j string, err error) {
+	str := string(content)
+	str = strings.TrimSpace(str)
+
+	var obj interface{}
+
+	obj, err = toObj(content)
+	if err != nil {
+		return
+	}
+
+	var bytes []byte
+	bytes, err = json.Marshal(obj)
+	j = string(bytes)
 
 	return
 }

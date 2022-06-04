@@ -1,0 +1,106 @@
+# This is a goreleaser config file that handles building and sending builds to GitHub.
+# You can install goreleaser on MacOs with Homebrew
+# https://goreleaser.com/install/
+# brew install goreleaser
+# Quick notes
+# Release locally
+# goreleaser release --snapshot --rm-dist
+# Release latest tagged version
+# git tag -a v0.1.0 -m "First release"
+# git push origin v0.1.0
+# goreleaser release --rm-dist
+# git push --delete origin v...
+
+release:
+  # If set to auto, will mark the release as not ready for production
+  # in case there is an indicator for this in the tag e.g. v1.0.0-rc1
+  # If set to true, will mark the release as not ready for production.
+  # Default is false.
+  prerelease: auto
+
+  # What to do with the release notes in case there the release already exists.
+  #
+  # Valid options are:
+  # - `keep-existing`: keep the existing notes
+  # - `append`: append the current release notes to the existing notes
+  # - `prepend`: prepend the current release notes to the existing notes
+  # - `replace`: replace existing notes
+  #
+  # Default is `keep-existing`.
+  mode: replace
+
+  # Header template for the release body.
+  # Defaults to empty.
+  header: |
+    ## jsonpath ({{ .Date }})
+
+    v0.1.0
+    Initial release
+
+  # Footer template for the release body.
+  # Defaults to empty.
+  footer: |
+    ## Enjoy
+
+    Those were the changes on {{ .Tag }}
+
+changelog:
+  # Set this to true if you don't want any changelog at all.
+  # Warning: this will also ignore any changelog files passed via `--release-notes`,
+  # and will render an empty changelog.
+  # This may result in an empty release notes on GitHub/GitLab/Gitea.
+  skip: true
+
+# This is an example .goreleaser.yml file with some sensible defaults.
+# Make sure to check the documentation at https://goreleaser.com
+# .goreleaser.yaml
+github_urls:
+  skip_tls_verify: false
+
+env_files:
+  github_token: ~/.config/goreleaser/github_token
+
+before:
+  hooks:
+    # You may remove this if you don't use go modules.
+    - go mod tidy
+    - go mod vendor
+    # you may remove this if you don't need go generate
+    # - go generate ./...
+builds:
+  - # env:
+    env:
+      - CGO_ENABLED=0
+    ldflags:
+      - >
+        -X main.GitCommit={{.ShortCommit}} 
+        -X main.GitLastTag={{.PreviousTag}}
+        -X main.GitExactTag={{.Tag}}
+        -X main.Date={{.Date}}
+
+    id: jsonpath
+    dir: .
+    main: ./cmd/jsonpath
+    binary: jsonpath
+    goos:
+      - darwin
+      - linux
+
+    # GOARCH to build for.
+    # For more info refer to: https://golang.org/doc/install/source#environment
+    # Defaults are 386, amd64 and arm64.
+    goarch:
+      - amd64
+      - arm64
+archives:
+  - replacements:
+      darwin: darwin
+      linux: linux
+      windows: windows
+      386: i386
+      amd64: amd64
+      arm64: arm64
+checksum:
+  name_template: "checksums.txt"
+snapshot:
+  name_template: "{{ incpatch .Version }}-next"

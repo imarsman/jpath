@@ -81,104 +81,113 @@ spec:
         - containerPort: 81
 `
 
-func TestIsJSON(t *testing.T) {
-	is := is.New(t)
+// func TestIsJSON(t *testing.T) {
+// 	is := is.New(t)
 
-	testIsJSON := isJSON(j)
-	is.True(testIsJSON)
+// 	testIsJSON := isJSON(j)
+// 	is.True(testIsJSON)
 
-	testIsJSON = isJSON(y)
-	is.True(testIsJSON == false)
-}
+// 	testIsJSON = isJSON(y)
+// 	is.True(testIsJSON == false)
+// }
 
-func TestJSONToYAML(t *testing.T) {
-	is := is.New(t)
+// func TestJSONToYAML(t *testing.T) {
+// 	is := is.New(t)
 
-	testIsJSON := isJSON(j)
-	is.True(testIsJSON)
+// 	testIsJSON := isJSON(j)
+// 	is.True(testIsJSON)
 
-	yaml, err := ToYAML(j)
-	is.NoErr(err)
-	t.Log(yaml)
-}
+// 	yaml, err := ContentToYAML(j)
+// 	is.NoErr(err)
+// 	t.Log(yaml)
+// }
 
-func TestJSONPath(t *testing.T) {
-	is := is.New(t)
-	path := "$..spec.containers[*].image"
+// func TestJSONPath(t *testing.T) {
+// 	is := is.New(t)
+// 	path := "$..spec.containers[*].image"
 
-	parts, err := SubNodesStrings(path, y)
-	is.NoErr(err)
-	t.Log("parts length", len(parts))
-	// for _, p := range parts {
-	// 	t.Log(p)
-	// }
-	out, err := toYAML(parts)
-	is.NoErr(err)
-	t.Log("yaml", out)
-	out, err = toYAML(parts)
-	is.NoErr(err)
-	t.Log("yaml", out)
-}
+// 	parts, err := SubNodesStrings(path, y)
+// 	is.NoErr(err)
+// 	t.Log("parts length", len(parts))
+// 	// for _, p := range parts {
+// 	// 	t.Log(p)
+// 	// }
+// 	out, err := toYAML(parts)
+// 	is.NoErr(err)
+// 	t.Log("yaml", out)
+// 	out, err = toYAML(parts)
+// 	is.NoErr(err)
+// 	t.Log("yaml", out)
+// }
 
-func TestJSONPathFromJSON(t *testing.T) {
-	is := is.New(t)
-	path := "$.glossary..GlossDiv.title"
-	parts, err := SubNodesStrings(path, j)
-	is.NoErr(err)
-	t.Log("parts length", len(parts))
-	out, err := toJSON(parts)
-	t.Log("json", out)
+// func TestJSONPathFromJSON(t *testing.T) {
+// 	is := is.New(t)
+// 	path := "$.glossary..GlossDiv.title"
+// 	parts, err := SubNodesStrings(path, j)
+// 	is.NoErr(err)
+// 	t.Log("parts length", len(parts))
+// 	// out, err := toJSON(parts)
+// 	// t.Log("json", out)
 
-	path = "$..GlossEntry"
-	parts, err = SubNodesStrings(path, j)
-	is.NoErr(err)
-	t.Log("parts length", len(parts))
-	out, err = toJSON(parts)
-	t.Log("json", out)
-	t.Log("parts", parts)
+// 	path = "$..GlossEntry"
+// 	parts, err = SubNodesStrings(path, j)
+// 	is.NoErr(err)
+// 	t.Log("parts length", len(parts))
+// 	// out, err = toJSON(parts)
+// 	// t.Log("json", out)
+// 	t.Log("parts", parts)
 
-	path = "$..GlossEntry..Acronym"
-	parts, err = SubNodesStrings(path, j)
-	is.NoErr(err)
-	t.Log("parts length", len(parts))
-	out, err = toJSON(parts)
-	t.Log("json", out)
-	t.Log("parts", parts)
-	out, err = toYAML(parts)
-	t.Log("yaml", out)
-	t.Log(parts)
-}
+// 	path = "$..GlossEntry..Acronym"
+// 	parts, err = SubNodesStrings(path, j)
+// 	is.NoErr(err)
+// 	t.Log("parts length", len(parts))
+// 	// out, err = toJSON(parts)
+// 	// t.Log("json", out)
+// 	t.Log("parts", parts)
+// 	// out, err = toYAML(parts)
+// 	// t.Log("yaml", out)
+// 	t.Log(parts)
+// }
 
 func TestJSONPathFromJSON2(t *testing.T) {
 	is := is.New(t)
 	path := "$..[?(@.color=~/red/)].color"
-	parts, err := SubNodesStrings(path, j2)
+	parts, err := subNodesStrings(path, j2)
 	is.NoErr(err)
-	t.Log("parts", parts)
-	out, err := toYAML(parts)
-	t.Log("yaml", out)
+	obj, err := fromStringArr(parts)
+	output, err := objToJSON(obj)
 	is.NoErr(err)
-	out, err = toJSON(parts)
-	t.Log("json", out)
+	t.Log(output)
+	output, err = objToYAML(obj)
 	is.NoErr(err)
+	t.Log(output)
+}
 
-	t.Log("compact", ToCompact(parts))
-	path = "$..color"
-	parts, err = SubNodesStrings(path, j2)
+func TestJSONPathFromJSON2Longer(t *testing.T) {
+	is := is.New(t)
+	path := "$..color"
+	parts, err := subNodesStrings(path, j2)
 	is.NoErr(err)
-	t.Log("compact", ToCompact(parts))
+	obj, err := fromStringArr(parts)
+	output, err := objToJSON(obj)
+	is.NoErr(err)
+	t.Log(output)
+	output, err = objToYAML(obj)
+	is.NoErr(err)
+	t.Log(output)
 }
 
 func TestLongFromJSON2(t *testing.T) {
 	is := is.New(t)
 	path := "$.spec.template"
-	parts, err := SubNodesStrings(path, y)
+
+	parts, err := subNodesStrings(path, y)
 	is.NoErr(err)
-	t.Log("compact", ToCompact(parts))
-	out, err := toYAML(parts)
+	obj, err := fromStringArr(parts)
+	output, err := objToJSON(obj)
 	is.NoErr(err)
-	t.Log("yaml", out)
-	out, err = toJSON(parts)
+	t.Log(output)
+	output, err = objToYAML(obj)
 	is.NoErr(err)
-	t.Log("json", out)
+	t.Log(output)
 }
