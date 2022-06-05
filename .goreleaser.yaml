@@ -35,7 +35,7 @@ release:
     ## jsonpath ({{ .Date }})
 
     v0.1.0
-    Initial release
+    Initial tagged release
 
   # Footer template for the release body.
   # Defaults to empty.
