@@ -46,11 +46,14 @@ func (p *Path) process() (err error) {
 func (p *Path) ToYAML() (y string, err error) {
 	if len(p.Obj) == 1 {
 		y, err = objToYAML(p.Obj[0])
+		if err != nil {
+			return
+		}
 	} else {
 		y, err = objToYAML(p.Obj)
-	}
-	if err != nil {
-		return
+		if err != nil {
+			return
+		}
 	}
 	y = strings.TrimSpace(y)
 
@@ -61,11 +64,14 @@ func (p *Path) ToYAML() (y string, err error) {
 func (p *Path) ToJSON() (j string, err error) {
 	if len(p.Obj) == 1 {
 		j, err = objToJSON(p.Obj[0])
+		if err != nil {
+			return
+		}
 	} else {
 		j, err = objToJSON(p.Obj)
-	}
-	if err != nil {
-		return
+		if err != nil {
+			return
+		}
 	}
 	j = strings.TrimSpace(j)
 
@@ -102,12 +108,18 @@ func subNodesStrings(path string, content string) (parts []string, err error) {
 	}
 
 	actual, err := yamlPath.Find(&node)
+	if err != nil {
+		return
+	}
 	for _, a := range actual {
 		var buf bytes.Buffer
 		e := yaml.NewEncoder(&buf)
 		e.SetIndent(2)
 
 		err = e.Encode(a)
+		if err != nil {
+			return
+		}
 		e.Close()
 		parts = append(parts, strings.TrimSpace(buf.String()))
 	}
