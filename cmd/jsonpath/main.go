@@ -105,24 +105,29 @@ func main() {
 			content = strings.Join(lines, "\n")
 		}
 	}
-	path := path.NewPath(args.Path, content)
+	path, err := path.NewPath(args.Path, content)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
 
 	if args.YAML {
-		contents, err := path.ToYAML()
+		contents, err := path.YAML()
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
 		fmt.Println(contents)
 	} else if args.JSON {
-		contents, err := path.ToJSON()
+		contents, err := path.JSON()
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
 		fmt.Println(contents)
 	} else {
-		contents, err := path.ToJSON()
+		contents, err := path.JSON()
+		fmt.Println("here", err)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)

@@ -3,7 +3,6 @@ package path
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"strings"
 
 	"github.com/vmware-labs/yaml-jsonpath/pkg/yamlpath"
@@ -18,19 +17,23 @@ type Path struct {
 }
 
 // NewPath create a new path and initialize it
-func NewPath(path string, contents string) *Path {
-	p := new(Path)
+func NewPath(path string, contents string) (p *Path, err error) {
+	p = new(Path)
 	p.Contents = contents
 	p.Path = path
 
-	p.process()
+	err = p.process()
+	if err != nil {
+		return
+	}
 
-	return p
+	return
 }
 
 // process process a document using the jsonpath
 func (p *Path) process() (err error) {
-	parts, err := subNodesStrings(p.Path, p.Contents)
+	var parts []string
+	parts, err = subNodesStrings(p.Path, p.Contents)
 	if err != nil {
 		return
 	}
@@ -42,8 +45,8 @@ func (p *Path) process() (err error) {
 	return
 }
 
-// ToYAML get YAML subset based on jsonpath
-func (p *Path) ToYAML() (y string, err error) {
+// YAML get YAML subset based on jsonpath
+func (p *Path) YAML() (y string, err error) {
 	if len(p.Obj) == 1 {
 		y, err = objToYAML(p.Obj[0])
 		if err != nil {
@@ -60,8 +63,8 @@ func (p *Path) ToYAML() (y string, err error) {
 	return
 }
 
-// ToJSON get JSON subset based on jsonpath
-func (p *Path) ToJSON() (j string, err error) {
+// JSON get JSON subset based on jsonpath
+func (p *Path) JSON() (j string, err error) {
 	if len(p.Obj) == 1 {
 		j, err = objToJSON(p.Obj[0])
 		if err != nil {
@@ -130,18 +133,6 @@ func subNodesStrings(path string, content string) (parts []string, err error) {
 // isJSON test if string is JSON (not exact)
 func isJSON(content string) bool {
 	return strings.HasPrefix(content, "{") || strings.HasPrefix(content, "[")
-}
-
-// foundPartsToYAML convert found sections to a list of strings
-func foundPartsToYAML(parts []string) (y string, err error) {
-	bytes, err := yaml.Marshal(&parts)
-	if err != nil {
-		return
-	}
-	y = string(bytes)
-	fmt.Println(y)
-
-	return
 }
 
 // toYAMLNode convert string to yaml node
