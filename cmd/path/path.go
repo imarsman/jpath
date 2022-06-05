@@ -155,16 +155,14 @@ func toYAMLNode(content string) (node yaml.Node, err error) {
 // toObj convert incoming yaml or json to an interface matching the document
 func toObj(content string) (obj interface{}, err error) {
 	if isJSON(content) {
-		// var objArr []map[string]interface{}
-
-		e := json.NewDecoder(strings.NewReader(string(content)))
+		e := json.NewDecoder(strings.NewReader(content))
 		err = e.Decode(&obj)
 		if err != nil {
 			return
 		}
 		obj = expandToMatch(obj)
 	} else {
-		e := yaml.NewDecoder(strings.NewReader(string(content)))
+		e := yaml.NewDecoder(strings.NewReader(content))
 		err = e.Decode(&obj)
 		if err != nil {
 			return
