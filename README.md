@@ -12,8 +12,8 @@ Usage of this tool with a JSONPath will result in zero or more matches. The matc
 is an array of length 1 it is printed out on its own. If there are more than one match they are printed out as a YAML or
 JSON array. For example, here is an array printed out in JSON format
 
+`$ jsonpath '$..color' -file test/colours.json`
 ```json
-$ jsonpath '$..color' -file test/colours.json
 [
  "red",
  "green",
@@ -26,8 +26,9 @@ $ jsonpath '$..color' -file test/colours.json
 ```
 
 Here is the same query with YAML output
+
+`$ jsonpath '$..color' -file test/colours.json -yaml`
 ```yaml
-$ jsonpath '$..color' -file test/colours.json -yaml
 - red
 - green
 - blue
