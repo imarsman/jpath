@@ -34,6 +34,9 @@ release:
   header: |
     ## jsonpath ({{ .Date }})
 
+    v0.1.2
+    Fixed error handling and cleanup
+
     v0.1.1
     Reviewed error handling
 
