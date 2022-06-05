@@ -127,7 +127,6 @@ func main() {
 		fmt.Println(contents)
 	} else {
 		contents, err := path.JSON()
-		fmt.Println("here", err)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
