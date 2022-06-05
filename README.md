@@ -44,7 +44,7 @@ I will add a suite of tests to ensure that the library used works and to illustr
 
 A YAML array can be turned into a list that can be read by bash as an array.
 
-```
+```sh
 $ jsonpath -yaml '$..color' -file test/colours.json | awk 'BEGIN {IFS=/\s+/} {printf "%s ", $2}'|xargs
 red green blue cyan magenta yellow black
 ```
