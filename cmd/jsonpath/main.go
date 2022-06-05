@@ -32,7 +32,7 @@ type Args struct {
 	JSON bool   `arg:"-j,--json" help:"output json"`
 	YAML bool   `arg:"-y,--yaml" help:"output yaml"`
 	Path string `arg:"required,positional" help:"jsonpath to use"`
-	File string `arg:"positional" help:"file to use instead of stdin"`
+	File string `arg:"-f,--file" help:"file to use instead of stdin"`
 }
 
 // Version get version information
@@ -61,7 +61,7 @@ func main() {
 			// "path": predict.Nothing,
 			"yaml": predict.Nothing,
 			"json": predict.Nothing,
-			// "file": predict.Files("./*"),
+			"file": predict.Files("./*"),
 		},
 	}
 	cmd.Complete("jsonpath")
@@ -110,19 +110,22 @@ func main() {
 	if args.YAML {
 		contents, err := path.ToYAML()
 		if err != nil {
-
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
 		}
 		fmt.Println(contents)
 	} else if args.JSON {
 		contents, err := path.ToJSON()
 		if err != nil {
-
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
 		}
 		fmt.Println(contents)
 	} else {
 		contents, err := path.ToJSON()
 		if err != nil {
-
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
 		}
 		fmt.Println(contents)
 	}

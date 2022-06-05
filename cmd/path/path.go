@@ -14,7 +14,7 @@ import (
 type Path struct {
 	Path     string
 	Contents string
-	Obj      interface{}
+	Obj      []interface{}
 }
 
 // NewPath create a new path and initialize it
@@ -44,7 +44,11 @@ func (p *Path) process() (err error) {
 
 // ToYAML get YAML subset based on jsonpath
 func (p *Path) ToYAML() (y string, err error) {
-	y, err = objToYAML(p.Obj)
+	if len(p.Obj) == 1 {
+		y, err = objToYAML(p.Obj[0])
+	} else {
+		y, err = objToYAML(p.Obj)
+	}
 	if err != nil {
 		return
 	}
@@ -55,7 +59,11 @@ func (p *Path) ToYAML() (y string, err error) {
 
 // ToJSON get JSON subset based on jsonpath
 func (p *Path) ToJSON() (j string, err error) {
-	j, err = objToJSON(p.Obj)
+	if len(p.Obj) == 1 {
+		j, err = objToJSON(p.Obj[0])
+	} else {
+		j, err = objToJSON(p.Obj)
+	}
 	if err != nil {
 		return
 	}
