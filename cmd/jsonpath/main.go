@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 
 	"github.com/alexflint/go-arg"
@@ -44,11 +45,13 @@ func (Args) Version() string {
 	buf.WriteString(fmt.Sprintln(strings.Repeat("-", len(msg))))
 
 	if GitCommit != "" {
-		buf.WriteString(fmt.Sprintf("Commit: %13s\n", GitCommit))
+		buf.WriteString(fmt.Sprintf("Commit: %8s\n", GitCommit))
 	}
 	if Date != "" {
-		buf.WriteString(fmt.Sprintf("Compile Date: %12s\n", Date))
+		buf.WriteString(fmt.Sprintf("Date: %23s\n", Date))
 	}
+	buf.WriteString(fmt.Sprintf("OS %12s\n", runtime.GOOS))
+	buf.WriteString(fmt.Sprintf("ARCH %9s\n", runtime.GOARCH))
 
 	return buf.String()
 }
