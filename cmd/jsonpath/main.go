@@ -50,8 +50,11 @@ func (Args) Version() string {
 	if Date != "" {
 		buf.WriteString(fmt.Sprintf("Date: %23s\n", Date))
 	}
-	buf.WriteString(fmt.Sprintf("OS %12s\n", runtime.GOOS))
-	buf.WriteString(fmt.Sprintf("ARCH %9s\n", runtime.GOARCH))
+	if GitExactTag != "" {
+		buf.WriteString(fmt.Sprintf("Tag: %10s\n", GitExactTag))
+	}
+	buf.WriteString(fmt.Sprintf("OS: %11s\n", runtime.GOOS))
+	buf.WriteString(fmt.Sprintf("ARCH: %8s\n", runtime.GOARCH))
 
 	return buf.String()
 }
