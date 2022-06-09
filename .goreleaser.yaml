@@ -34,6 +34,9 @@ release:
   header: |
     ## jsonpath ({{ .Date }})
 
+    v0.1.10
+    Work on JSON/YAML handling logic
+
     v0.1.9
     Moved path package to pkg dir
 
@@ -69,7 +72,7 @@ release:
   footer: |
     ## Enjoy
 
-    Those were the changes on {{ .Tag }}
+    Those were the changes so far to {{ .Tag }}
 
 changelog:
   # Set this to true if you don't want any changelog at all.
