@@ -29,11 +29,13 @@ var GitExactTag string
 // Date latest compile date
 var Date string
 
+// Args cli args
 type Args struct {
 	JSON bool   `arg:"-j,--json" help:"output json"`
 	YAML bool   `arg:"-y,--yaml" help:"output yaml"`
 	Path string `arg:"positional" help:"jsonpath to use"`
 	File string `arg:"-f,--file" help:"file to use instead of stdin"`
+	Type bool   `arg:"-t,--type" help:"Show inferred type of input"`
 }
 
 // Version get version information
@@ -68,6 +70,7 @@ func main() {
 			"yaml": predict.Nothing,
 			"json": predict.Nothing,
 			"file": predict.Files("./*"),
+			"type": predict.Nothing,
 		},
 	}
 	cmd.Complete("jsonpath")
@@ -112,8 +115,20 @@ func main() {
 		}
 	}
 
+	// jsonpath library will deal with "" as if it is "$"
 	if args.Path == "" {
 		args.Path = "$"
+	}
+
+	// Print out type based on guess tied to JSON { and [ starting characters
+	if args.Type {
+		isJSON := path.IsJSON(content)
+		if isJSON {
+			fmt.Println("JSON")
+		} else {
+			fmt.Println("YAML")
+		}
+		os.Exit(0)
 	}
 
 	path, err := path.NewPath(args.Path, content)

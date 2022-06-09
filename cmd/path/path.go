@@ -130,14 +130,14 @@ func subNodesStrings(path string, content string) (parts []string, err error) {
 	return
 }
 
-// isJSON test if string is JSON (not exact)
-func isJSON(content string) bool {
+// IsJSON test if string is JSON (not exact)
+func IsJSON(content string) bool {
 	return strings.HasPrefix(content, "{") || strings.HasPrefix(content, "[")
 }
 
 // toYAMLNode convert string to yaml node
 func toYAMLNode(content string) (node yaml.Node, err error) {
-	if isJSON(content) {
+	if IsJSON(content) {
 		content, err = contentToYAML(content)
 		if err != nil {
 			return
@@ -154,6 +154,7 @@ func toYAMLNode(content string) (node yaml.Node, err error) {
 
 // toObj convert incoming yaml or json to an interface matching the document
 func toObj(content string) (obj interface{}, err error) {
+	// YAML is a superset of JSON, so can read in JSON and decode with YAML parser
 	// if isJSON(content) {
 	// 	valid := json.Valid([]byte(content))
 	// 	if !valid {
