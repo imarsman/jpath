@@ -12,7 +12,7 @@ import (
 	"strings"
 
 	"github.com/alexflint/go-arg"
-	"github.com/imarsman/jsonpath/cmd/path"
+	"github.com/imarsman/jsonpath/pkg/path"
 	"github.com/posener/complete/v2"
 	"github.com/posener/complete/v2/predict"
 )
