@@ -34,6 +34,9 @@ release:
   header: |
     ## jsonpath ({{ .Date }})
 
+    v0.1.9
+    Moved path package to pkg dir
+
     v0.1.8
     Handle request for document type
 
