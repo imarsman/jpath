@@ -131,12 +131,14 @@ func main() {
 		os.Exit(0)
 	}
 
+	// Handle jsonpath string
 	path, err := path.NewPath(args.Path, content)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
 
+	// Print out results as YAML or as JSON
 	if args.YAML {
 		contents, err := path.YAML()
 		if err != nil {
@@ -152,6 +154,7 @@ func main() {
 		}
 		fmt.Println(contents)
 	} else {
+		// Print out json by default
 		contents, err := path.JSON()
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
