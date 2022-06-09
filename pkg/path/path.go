@@ -164,7 +164,7 @@ func toYAMLNode(content string) (node yaml.Node, err error) {
 
 // toObj convert incoming yaml or json to an interface matching the document
 func toObj(content string) (obj interface{}, err error) {
-	if json.Valid([]byte(content)) {
+	if IsJSON(content) {
 		decoder := json.NewDecoder(strings.NewReader(content))
 		err = decoder.Decode(&obj)
 		if err != nil {
