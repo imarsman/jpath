@@ -34,6 +34,9 @@ release:
   header: |
     ## jsonpath ({{ .Date }})
 
+    v0.1.7
+    Using yaml parser for JSON since YAML is a superset of JSON
+
     v0.1.6
     Added default path if none supplied
 
