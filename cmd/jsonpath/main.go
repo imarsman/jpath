@@ -111,6 +111,17 @@ func main() {
 			content = strings.Join(lines, "\n")
 		}
 	}
+
+	// if args.Validate {
+	// 	err := path.Validate(content)
+	// 	if err != nil {
+	// 		fmt.Println("Validation resulted in", err)
+	// 		os.Exit(1)
+	// 	}
+	// 	fmt.Println("No validation errors")
+	// 	os.Exit(0)
+	// }
+
 	path, err := path.NewPath(args.Path, content)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)

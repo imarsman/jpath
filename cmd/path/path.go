@@ -3,6 +3,7 @@ package path
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"strings"
 
 	"github.com/vmware-labs/yaml-jsonpath/pkg/yamlpath"
@@ -155,15 +156,20 @@ func toYAMLNode(content string) (node yaml.Node, err error) {
 // toObj convert incoming yaml or json to an interface matching the document
 func toObj(content string) (obj interface{}, err error) {
 	if isJSON(content) {
-		e := json.NewDecoder(strings.NewReader(content))
-		err = e.Decode(&obj)
+		valid := json.Valid([]byte(content))
+		if !valid {
+			err = errors.New("Incoming JSON is not valid")
+			return
+		}
+		decoder := json.NewDecoder(strings.NewReader(content))
+		err = decoder.Decode(&obj)
 		if err != nil {
 			return
 		}
 		obj = expandToMatch(obj)
 	} else {
-		e := yaml.NewDecoder(strings.NewReader(content))
-		err = e.Decode(&obj)
+		decoder := yaml.NewDecoder(strings.NewReader(content))
+		err = decoder.Decode(&obj)
 		if err != nil {
 			return
 		}
