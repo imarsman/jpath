@@ -3,6 +3,8 @@ package path
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
+	"os"
 	"strings"
 
 	"github.com/vmware-labs/yaml-jsonpath/pkg/yamlpath"
@@ -131,8 +133,16 @@ func subNodesStrings(path string, content string) (parts []string, err error) {
 }
 
 // IsJSON test if string is JSON (not exact)
-func IsJSON(content string) bool {
-	return strings.HasPrefix(content, "{") || strings.HasPrefix(content, "[")
+func IsJSON(content string) (isJSON bool) {
+	if strings.HasPrefix(content, "{") || strings.HasPrefix(content, "[") {
+		if json.Valid([]byte(content)) {
+			return true
+		}
+		fmt.Fprintf(os.Stderr, "Validity check failed")
+		os.Exit(1)
+	}
+
+	return
 }
 
 // toYAMLNode convert string to yaml node
@@ -154,27 +164,21 @@ func toYAMLNode(content string) (node yaml.Node, err error) {
 
 // toObj convert incoming yaml or json to an interface matching the document
 func toObj(content string) (obj interface{}, err error) {
-	// YAML is a superset of JSON, so can read in JSON and decode with YAML parser
-	// if isJSON(content) {
-	// 	valid := json.Valid([]byte(content))
-	// 	if !valid {
-	// 		err = errors.New("Incoming JSON is not valid")
-	// 		return
-	// 	}
-	// 	decoder := json.NewDecoder(strings.NewReader(content))
-	// 	err = decoder.Decode(&obj)
-	// 	if err != nil {
-	// 		return
-	// 	}
-	// 	obj = expandToMatch(obj)
-	// } else {
-	decoder := yaml.NewDecoder(strings.NewReader(content))
-	err = decoder.Decode(&obj)
-	if err != nil {
-		return
+	if json.Valid([]byte(content)) {
+		decoder := json.NewDecoder(strings.NewReader(content))
+		err = decoder.Decode(&obj)
+		if err != nil {
+			return
+		}
+		obj = expandToMatch(obj)
+	} else {
+		decoder := yaml.NewDecoder(strings.NewReader(content))
+		err = decoder.Decode(&obj)
+		if err != nil {
+			return
+		}
+		obj = expandToMatch(obj)
 	}
-	obj = expandToMatch(obj)
-	// }
 
 	return
 }

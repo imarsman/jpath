@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"bytes"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -122,8 +123,7 @@ func main() {
 
 	// Print out type based on guess tied to JSON { and [ starting characters
 	if args.Type {
-		isJSON := path.IsJSON(content)
-		if isJSON {
+		if json.Valid([]byte(content)) {
 			fmt.Println("JSON")
 		} else {
 			fmt.Println("YAML")
