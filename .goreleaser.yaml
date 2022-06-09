@@ -34,6 +34,9 @@ release:
   header: |
     ## jsonpath ({{ .Date }})
 
+    v0.1.6
+    Added default path if none supplied
+
     v0.1.5
     Updated version information
 
