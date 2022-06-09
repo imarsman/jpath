@@ -32,7 +32,7 @@ var Date string
 type Args struct {
 	JSON bool   `arg:"-j,--json" help:"output json"`
 	YAML bool   `arg:"-y,--yaml" help:"output yaml"`
-	Path string `arg:"required,positional" help:"jsonpath to use"`
+	Path string `arg:"positional" help:"jsonpath to use"`
 	File string `arg:"-f,--file" help:"file to use instead of stdin"`
 }
 
@@ -112,15 +112,9 @@ func main() {
 		}
 	}
 
-	// if args.Validate {
-	// 	err := path.Validate(content)
-	// 	if err != nil {
-	// 		fmt.Println("Validation resulted in", err)
-	// 		os.Exit(1)
-	// 	}
-	// 	fmt.Println("No validation errors")
-	// 	os.Exit(0)
-	// }
+	if args.Path == "" {
+		args.Path = "$"
+	}
 
 	path, err := path.NewPath(args.Path, content)
 	if err != nil {
