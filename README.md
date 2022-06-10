@@ -39,7 +39,7 @@ JSONPath is a proposed [IETF standard](https://tools.ietf.org/id/draft-goessner-
 | $..book[?(@.isbn)]                | filter all books with isbn number                            |
 | $..book[?(@.price<10)]            | filter all books cheapier than 10                            |
 | $..book[(?(@.author=~/Woodward/)] | book with author matching regex                              |
-| $..* of $                         | all members of JSON data item.                               |
+| $..* or $                         | all members of JSON data item.                               |
 | $.property~                       | get name of property                                         |
 
 Usage of this tool with a JSONPath will result in zero or more matches. The matches are returned as an array. If there
