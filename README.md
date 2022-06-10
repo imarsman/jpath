@@ -27,20 +27,18 @@ JSONPath is a proposed [IETF standard](https://tools.ietf.org/id/draft-goessner-
 
 | JSONPath                          | Result                                                       |
 | :-------------------------------- | :----------------------------------------------------------- |
-| $.store.book[*].author            | the authors of all books in the store                        |
-| $..author                         | all authors                                                  |
-| $.store.*                         | all things in store, which are some books and a red bicycle. |
-| $.store..price                    | the price of everything in the store.                        |
-| $..book[2]                        | the third book                                               |
-| $..book[(@.pages < 10)]           | book with pages value < 10                                   |
-| the last book in order.           |                                                              |
-| $..book[0,1]                      |                                                              |
-| the first two books               |                                                              |
-| $..book[?(@.isbn)]                | filter all books with isbn number                            |
-| $..book[?(@.price<10)]            | filter all books cheapier than 10                            |
-| $..book[(?(@.author=~/Woodward/)] | book with author matching regex                              |
+| `$.store.book[*].author`            | the authors of all books in the store                        |
+| `$..author`                         | all authors                                                  |
+| `$.store.*`                         | all things in store, which are some books and a red bicycle. |
+| `$.store..price`                    | the price of everything in the store.                        |
+| `$..book[2]`                        | the third book                                               |
+| `$..book[(@.pages < 10)]`           | book with pages value < 10                                   |
+| `$..book[0,1]`                      |  the first two books                                                            |
+| `$..book[?(@.isbn)]`                | filter all books with isbn number                            |
+| `$..book[?(@.price<10)]`            | filter all books cheapier than 10                            |
+| `$..book[(?(@.author=~/Woodward/)]` | book with author matching regex                              |
 | `$..* or $`                         | all members of JSON data item.                               |
-| $.property~                       | get name of property                                         |
+| `$.property~`                       | get name of property                                         |
 
 Usage of this tool with a JSONPath will result in zero or more matches. The matches are returned as an array. If there
 is an array of length 1 it is printed out on its own. If there are more than one match they are printed out as a YAML or
