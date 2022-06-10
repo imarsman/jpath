@@ -10,30 +10,30 @@ project's README file outlines the JSONPath that the project has implemented.
 
 JSONPath is a proposed [IETF standard](https://tools.ietf.org/id/draft-goessner-dispatch-jsonpath-00.html)
 
-| JSONPath         | Description                                                           |
-| :--------------- | :-------------------------------------------------------------------- |
-| $                | the root object/element                                               |
-| @                | the current object/element                                            |
-| . or []          | child operator                                                        |
-| ..               | nested descendants. JSONPath borrows this syntax from E4X.            |
-| *                | wildcard. All objects/elements regardless of their names.             |
-| []               | subscript operator. XPath uses it to iterate over element collections |
-|                  | and for predicates. In JavaScript and JSON it is the native array     |
-|                  | operator.                                                             |
-| [,]              | JSONPath allows alternate names or array indices as a set.            |
-| [start:end:step] | array slice operator borrowed from ES4.                               |
-| ?()              | applies a filter (script) expression.                                 |
+| JSONPath           | Description                                                           |
+| :----------------- | :-------------------------------------------------------------------- |
+| `$`                | the root object/element                                               |
+| `@`                | the current object/element                                            |
+| `. or []`          | child operator                                                        |
+| `..`               | nested descendants. JSONPath borrows this syntax from E4X.            |
+| `*`                | wildcard. All objects/elements regardless of their names.             |
+| `[]`               | subscript operator. XPath uses it to iterate over element collections |
+|                    | and for predicates. In JavaScript and JSON it is the native array     |
+|                    | operator.                                                             |
+| `[,]`              | JSONPath allows alternate names or array indices as a set.            |
+| `[start:end:step]` | array slice operator borrowed from ES4.                               |
+| `?()`              | applies a filter (script) expression.                                 |
 
 
-| JSONPath                          | Result                                                       |
-| :-------------------------------- | :----------------------------------------------------------- |
+| JSONPath                            | Result                                                       |
+| :---------------------------------- | :----------------------------------------------------------- |
 | `$.store.book[*].author`            | the authors of all books in the store                        |
 | `$..author`                         | all authors                                                  |
 | `$.store.*`                         | all things in store, which are some books and a red bicycle. |
 | `$.store..price`                    | the price of everything in the store.                        |
 | `$..book[2]`                        | the third book                                               |
 | `$..book[(@.pages < 10)]`           | book with pages value < 10                                   |
-| `$..book[0,1]`                      |  the first two books                                                            |
+| `$..book[0,1]`                      | the first two books                                          |
 | `$..book[?(@.isbn)]`                | filter all books with isbn number                            |
 | `$..book[?(@.price<10)]`            | filter all books cheapier than 10                            |
 | `$..book[(?(@.author=~/Woodward/)]` | book with author matching regex                              |
