@@ -82,3 +82,30 @@ $ jsonpath -yaml '$..color' -file test/colours.json | \
     awk 'BEGIN {IFS=/\s+/} {printf "%s ", $2}' | xargs
 red green blue cyan magenta yellow black
 ```
+
+## Usage
+
+```
+$ jsonpath -h
+jsonpath
+--------
+Commit:  222e51e
+Date:    2022-06-10T02:58:28Z
+Tag:     v0.1.10
+OS:      darwin
+ARCH:    arm64
+
+Usage: jsonpath [--json] [--yaml] [--file FILE] [--type] [--summary] [PATH]
+
+Positional arguments:
+  PATH                   jsonpath to use
+
+Options:
+  --json, -j             output json
+  --yaml, -y             output yaml
+  --file FILE, -f FILE   file to use instead of stdin
+  --type, -t             Show inferred type of input
+  --summary, -s          Show summary
+  --help, -h             display this help and exit
+  --version              display version and exit
+```

@@ -34,6 +34,9 @@ release:
   header: |
     ## jsonpath ({{ .Date }})
 
+    v0.1.12
+    Cosmetic changes
+
     v0.1.11
     Added count and summary
 
