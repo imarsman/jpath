@@ -79,6 +79,6 @@ A YAML array can be turned into a list that can be read by bash as an array.
 
 ```sh
 $ jsonpath -yaml '$..color' -file test/colours.json | \
-    awk 'BEGIN {IFS=/\s+/} {printf "%s ", $2}'|xargs
+    awk 'BEGIN {IFS=/\s+/} {printf "%s ", $2}' | xargs
 red green blue cyan magenta yellow black
 ```
