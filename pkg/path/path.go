@@ -16,6 +16,7 @@ type Path struct {
 	Path     string
 	Contents string
 	Obj      []interface{}
+	Count    int
 }
 
 // NewPath create a new path and initialize it
@@ -43,6 +44,7 @@ func (p *Path) process() (err error) {
 	if err != nil {
 		return
 	}
+	p.Count = len(p.Obj)
 
 	return
 }

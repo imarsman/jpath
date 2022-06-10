@@ -32,11 +32,12 @@ var Date string
 
 // Args cli args
 type Args struct {
-	JSON bool   `arg:"-j,--json" help:"output json"`
-	YAML bool   `arg:"-y,--yaml" help:"output yaml"`
-	Path string `arg:"positional" help:"jsonpath to use"`
-	File string `arg:"-f,--file" help:"file to use instead of stdin"`
-	Type bool   `arg:"-t,--type" help:"Show inferred type of input"`
+	JSON    bool   `arg:"-j,--json" help:"output json"`
+	YAML    bool   `arg:"-y,--yaml" help:"output yaml"`
+	Path    string `arg:"positional" help:"jsonpath to use"`
+	File    string `arg:"-f,--file" help:"file to use instead of stdin"`
+	Type    bool   `arg:"-t,--type" help:"Show inferred type of input"`
+	Summary bool   `arg:"-s,--summary" help:"Show summary"`
 }
 
 // Version get version information
@@ -68,10 +69,11 @@ func main() {
 	cmd := &complete.Command{
 		Flags: map[string]complete.Predictor{
 			// "path": predict.Nothing,
-			"yaml": predict.Nothing,
-			"json": predict.Nothing,
-			"file": predict.Files("./*"),
-			"type": predict.Nothing,
+			"yaml":    predict.Nothing,
+			"json":    predict.Nothing,
+			"file":    predict.Files("./*"),
+			"type":    predict.Nothing,
+			"summary": predict.Nothing,
 		},
 	}
 	cmd.Complete("jsonpath")
@@ -126,6 +128,7 @@ func main() {
 		if json.Valid([]byte(content)) {
 			fmt.Println("JSON")
 		} else {
+
 			fmt.Println("YAML")
 		}
 		os.Exit(0)
@@ -146,6 +149,13 @@ func main() {
 			os.Exit(1)
 		}
 		fmt.Println(contents)
+		if args.Summary {
+			if path.Count == 1 {
+				fmt.Printf("\n%d item found\n", path.Count)
+			} else {
+				fmt.Printf("\n%d items found\n", path.Count)
+			}
+		}
 	} else if args.JSON {
 		contents, err := path.JSON()
 		if err != nil {
@@ -153,6 +163,11 @@ func main() {
 			os.Exit(1)
 		}
 		fmt.Println(contents)
+		if path.Count == 1 {
+			fmt.Printf("\n%d item found\n", path.Count)
+		} else {
+			fmt.Printf("\n%d items found\n", path.Count)
+		}
 	} else {
 		// Print out json by default
 		contents, err := path.JSON()
@@ -161,5 +176,10 @@ func main() {
 			os.Exit(1)
 		}
 		fmt.Println(contents)
+		if path.Count == 1 {
+			fmt.Printf("\n%d item found\n", path.Count)
+		} else {
+			fmt.Printf("\n%d items found\n", path.Count)
+		}
 	}
 }
