@@ -16,7 +16,6 @@ type Path struct {
 	Path     string
 	Contents string
 	Obj      []interface{}
-	Count    int
 }
 
 // NewPath create a new path and initialize it
@@ -33,6 +32,13 @@ func NewPath(path string, contents string) (p *Path, err error) {
 	return
 }
 
+// SubNodeCount the count of sub-documents found
+func (p *Path) SubNodeCount() (count int) {
+	count = len(p.Obj)
+
+	return
+}
+
 // process process a document using the jsonpath
 func (p *Path) process() (err error) {
 	var parts []string
@@ -44,7 +50,6 @@ func (p *Path) process() (err error) {
 	if err != nil {
 		return
 	}
-	p.Count = len(p.Obj)
 
 	return
 }
