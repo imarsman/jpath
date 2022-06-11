@@ -8,7 +8,7 @@ JSONPath is not terribly rigorous as standards go. The package used in this proj
 [yaml-jsonpath](https://github.com/vmware-labs/yaml-jsonpathhttps://github.com/vmware-labs/yaml-jsonpath). That
 project's README file outlines the JSONPath that the project has implemented.
 
-JSONPath is a proposed [IETF standard](https://tools.ietf.org/id/draft-goessner-dispatch-jsonpath-00.html)
+JSONPath is a proposed [IETF standard](https://tools.ietf.org/id/draft-goessner-dispatch-jsonpath-00.html).
 
 | JSONPath           | Description                                                           |
 | :----------------- | :-------------------------------------------------------------------- |
@@ -18,12 +18,20 @@ JSONPath is a proposed [IETF standard](https://tools.ietf.org/id/draft-goessner-
 | `..`               | nested descendants. JSONPath borrows this syntax from E4X.            |
 | `*`                | wildcard. All objects/elements regardless of their names.             |
 | `[]`               | subscript operator. XPath uses it to iterate over element collections |
-|                    | and for predicates. In JavaScript and JSON it is the native array     |
-|                    | operator.                                                             |
+|                    | and for predicates. In JSON and YAML it is the native array operator  |
 | `[,]`              | JSONPath allows alternate names or array indices as a set.            |
 | `[start:end:step]` | array slice operator borrowed from ES4.                               |
 | `?()`              | applies a filter (script) expression.                                 |
 
+| JSONPath comparison operator | Description                        |
+| :--------------------------- | :--------------------------------- |
+| `==`                         | equality                           |
+| `!=`                         | inequality                         |
+| `>`                          | numeric greater than               |
+| `>=`                         | numeric greater than or equal to   |
+| `<`                          | numeric less than                  |
+| `<=`                         | numeric less than or equal to      |
+| `=~`                         | subpath matches regular expression |
 
 | JSONPath                            | Result                                                       |
 | :---------------------------------- | :----------------------------------------------------------- |
