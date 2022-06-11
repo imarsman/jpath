@@ -163,10 +163,12 @@ func main() {
 			os.Exit(1)
 		}
 		fmt.Println(contents)
-		if path.SubNodeCount() == 1 {
-			fmt.Printf("\n%d item found\n", path.SubNodeCount())
-		} else {
-			fmt.Printf("\n%d items found\n", path.SubNodeCount())
+		if args.Summary {
+			if path.SubNodeCount() == 1 {
+				fmt.Printf("\n%d item found\n", path.SubNodeCount())
+			} else {
+				fmt.Printf("\n%d items found\n", path.SubNodeCount())
+			}
 		}
 	} else {
 		// Print out json by default
@@ -176,10 +178,12 @@ func main() {
 			os.Exit(1)
 		}
 		fmt.Println(contents)
-		if path.SubNodeCount() == 1 {
-			fmt.Printf("\n%d item found\n", path.SubNodeCount())
-		} else {
-			fmt.Printf("\n%d items found\n", path.SubNodeCount())
+		if args.Summary {
+			if path.SubNodeCount() == 1 {
+				fmt.Printf("\n%d item found\n", path.SubNodeCount())
+			} else {
+				fmt.Printf("\n%d items found\n", path.SubNodeCount())
+			}
 		}
 	}
 }
