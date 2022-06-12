@@ -13,7 +13,7 @@ import (
 	"strings"
 
 	"github.com/alexflint/go-arg"
-	"github.com/imarsman/jsonpath/pkg/path"
+	"github.com/imarsman/jpath/pkg/path"
 	"github.com/posener/complete/v2"
 	"github.com/posener/complete/v2/predict"
 )
@@ -44,7 +44,7 @@ type Args struct {
 func (Args) Version() string {
 	var buf = new(bytes.Buffer)
 
-	msg := "jsonpath"
+	msg := "jpath"
 	buf.WriteString(fmt.Sprintln(msg))
 	buf.WriteString(fmt.Sprintln(strings.Repeat("-", len(msg))))
 
@@ -76,7 +76,7 @@ func main() {
 			"summary": predict.Nothing,
 		},
 	}
-	cmd.Complete("jsonpath")
+	cmd.Complete("jpath")
 
 	arg.MustParse(&args)
 

@@ -1,4 +1,4 @@
-module github.com/imarsman/jsonpath
+module github.com/imarsman/jpath
 
 go 1.18
 

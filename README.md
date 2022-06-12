@@ -1,8 +1,8 @@
-# jsonpath
+# jpath - jsonpath for YAML and JSON
 
-CLI using JSONPath with YAML and JSON. Can be used to find and print subsets of a YAML or JSON file based on a JSONPath
-argument. JSON input is handled by first converting to YAML. JSONPath is applied to the YAML and matches printed to
-stdout.  Ouput can be YAML or JSON.
+CLI using JSONPath with YAML and JSON. The build is called jpath to make it more concise to type. Can be used to find
+and print subsets of a YAML or JSON file based on a JSONPath argument. JSON input is handled by first converting to
+YAML. JSONPath is applied to the YAML and matches printed to stdout.  Ouput can be YAML or JSON.
 
 JSONPath is not terribly rigorous as standards go. The package used in this project is
 [yaml-jsonpath](https://github.com/vmware-labs/yaml-jsonpathhttps://github.com/vmware-labs/yaml-jsonpath). That
@@ -52,7 +52,7 @@ Usage of this tool with a JSONPath will result in zero or more matches. The matc
 is an array of length 1 it is printed out on its own. If there are more than one match they are printed out as a YAML or
 JSON array. For example, here is an array printed out in JSON format
 
-`$ jsonpath '$..color' -file test/colours.json`
+`$ jpath '$..color' -file test/colours.json`
 ```json
 [
  "red",
@@ -67,7 +67,7 @@ JSON array. For example, here is an array printed out in JSON format
 
 Here is the same query with YAML output
 
-`$ jsonpath '$..color' -file test/colours.json -yaml`
+`$ jpath '$..color' -file test/colours.json -yaml`
 ```yaml
 - red
 - green
@@ -79,14 +79,14 @@ Here is the same query with YAML output
 ```
 
 This tool uses the [posener completion library](https://github.com/posener/complete/tree/master). You can set it up by
-typing `COMP_INSTALL=1 jsonpath`.
+typing `COMP_INSTALL=1 jpath`.
 
 I will add a suite of tests to ensure that the library used works and to illustrate as much as possible of jsonpath.
 
 A YAML array can be turned into a list that can be read by bash as an array.
 
 ```sh
-$ jsonpath -yaml '$..color' -file test/colours.json | \
+$ jpath -yaml '$..color' -file test/colours.json | \
     awk 'BEGIN {IFS=/\s+/} {printf "%s ", $2}' | xargs
 red green blue cyan magenta yellow black
 ```
@@ -94,8 +94,8 @@ red green blue cyan magenta yellow black
 ## Usage
 
 ```
-$ jsonpath -h
-jsonpath
+$ jpath -h
+jpath
 --------
 Commit:  222e51e
 Date:    2022-06-10T02:58:28Z

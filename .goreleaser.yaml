@@ -32,7 +32,7 @@ release:
   # Header template for the release body.
   # Defaults to empty.
   header: |
-    ## jsonpath ({{ .Date }})
+    ## jpath ({{ .Date }})
 
     v0.1.14
     Fixed failure to test for summary flag
@@ -120,10 +120,10 @@ builds:
         -X main.GitExactTag={{.Tag}}
         -X main.Date={{.Date}}
 
-    id: jsonpath
+    id: jpath
     dir: .
     main: ./cmd/jsonpath
-    binary: jsonpath
+    binary: jpath
     goos:
       - darwin
       - linux
