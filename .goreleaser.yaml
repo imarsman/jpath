@@ -125,7 +125,7 @@ builds:
 
     id: jpath
     dir: .
-    main: ./cmd/jsonpath
+    main: ./cmd/jpath
     binary: jpath
     goos:
       - darwin
