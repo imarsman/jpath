@@ -4,9 +4,15 @@ CLI using JSONPath with YAML and JSON. The build is called jpath to make it more
 and print subsets of a YAML or JSON file based on a JSONPath argument. JSON input is handled by first converting to
 YAML. JSONPath is applied to the YAML and matches printed to stdout.  Ouput can be YAML or JSON.
 
-JSONPath is not terribly rigorous as standards go. The package used in this project is
-[yaml-jsonpath](https://github.com/vmware-labs/yaml-jsonpathhttps://github.com/vmware-labs/yaml-jsonpath). That
-project's README file outlines the JSONPath that the project has implemented.
+The package used in this project is
+[yaml-jsonpath](https://github.com/vmware-labs/yaml-jsonpathhttps://github.com/vmware-labs/yaml-jsonpath). `yaml-jsonpath`
+uses a jsonpath parser that is used to access an underlying go-yaml v3 Node structure to extract sub-document matches.
+`yaml-jsonpath` also uses a fun library [go-yit](https://github.com/dprotaso/go-yit), which adds interation to `go-yaml`
+nodes.
+
+The only thing that could be added is the ability to reference a node's parent. This is not a common feature for
+JSONPath implementations but I have seen it referenced using an `^` operator. Given that JSON is implemented and used
+with languages from JavaScript to Python to C to Golang
 
 JSONPath is a proposed [IETF standard](https://tools.ietf.org/id/draft-goessner-dispatch-jsonpath-00.html).
 
