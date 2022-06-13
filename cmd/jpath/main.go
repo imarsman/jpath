@@ -3,7 +3,7 @@ package main
 import (
 	"bufio"
 	"bytes"
-	"embed"
+	_ "embed"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -20,8 +20,7 @@ import (
 )
 
 //go:embed NOTES.md
-
-var f embed.FS
+var notes string
 
 // GitCommit the latest git commit tag
 var GitCommit string
@@ -131,15 +130,7 @@ func main() {
 	}
 
 	if args.Notes {
-		source, err := f.ReadFile("NOTES.md")
-		if err != nil {
-			panic(err)
-		}
-
-		fmt.Println(string(source))
-		// result := markdown.Render(string(source), 80, 6)
-
-		// fmt.Println(string(result))
+		fmt.Println(string(notes))
 		os.Exit(0)
 	}
 
