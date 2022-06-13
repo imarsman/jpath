@@ -4,18 +4,6 @@ CLI using JSONPath with YAML and JSON. The build is called jpath to make it more
 and print subsets of a YAML or JSON file based on a JSONPath argument. JSON input is handled by first converting to
 YAML. JSONPath is applied to the YAML and matches printed to stdout.  Ouput can be YAML or JSON.
 
-The package used in this project is
-[yaml-jsonpath](https://github.com/vmware-labs/yaml-jsonpathhttps://github.com/vmware-labs/yaml-jsonpath). `yaml-jsonpath`
-uses a jsonpath parser that is used to access an underlying go-yaml v3 Node structure to extract sub-document matches.
-`yaml-jsonpath` also uses a fun library [go-yit](https://github.com/dprotaso/go-yit), which adds interation to `go-yaml`
-nodes.
-
-The only thing that could be added is the ability to reference a node's parent. This is not a common feature for
-JSONPath implementations but I have seen it referenced using an `^` operator. Given that JSON is implemented and used
-with languages from JavaScript to Python to C to Golang
-
-JSONPath is a proposed [IETF standard](https://tools.ietf.org/id/draft-goessner-dispatch-jsonpath-00.html).
-
 | JSONPath           | Description                                                           |
 | :----------------- | :-------------------------------------------------------------------- |
 | `$`                | the root object/element                                               |
@@ -83,11 +71,6 @@ Here is the same query with YAML output
 - yellow
 - black
 ```
-
-This tool uses the [posener completion library](https://github.com/posener/complete/tree/master). You can set it up by
-typing `COMP_INSTALL=1 jpath`.
-
-I will add a suite of tests to ensure that the library used works and to illustrate as much as possible of jsonpath.
 
 A YAML array can be turned into a list that can be read by bash as an array.
 

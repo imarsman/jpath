@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"bytes"
+	"embed"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -17,6 +18,10 @@ import (
 	"github.com/posener/complete/v2"
 	"github.com/posener/complete/v2/predict"
 )
+
+//go:embed NOTES.md
+
+var f embed.FS
 
 // GitCommit the latest git commit tag
 var GitCommit string
@@ -38,6 +43,7 @@ type Args struct {
 	File    string `arg:"-f,--file" help:"file to use instead of stdin"`
 	Type    bool   `arg:"-t,--type" help:"Show inferred type of input"`
 	Summary bool   `arg:"-s,--summary" help:"Show summary"`
+	Notes   bool   `arg:"-n,--notes" help:"show jsonpath notes"`
 }
 
 // Version get version information
@@ -74,6 +80,7 @@ func main() {
 			"file":    predict.Files("./*"),
 			"type":    predict.Nothing,
 			"summary": predict.Nothing,
+			"notes":   predict.Nothing,
 		},
 	}
 	cmd.Complete("jpath")
@@ -121,6 +128,19 @@ func main() {
 	// jsonpath library will deal with "" as if it is "$"
 	if args.Path == "" {
 		args.Path = "$"
+	}
+
+	if args.Notes {
+		source, err := f.ReadFile("NOTES.md")
+		if err != nil {
+			panic(err)
+		}
+
+		fmt.Println(string(source))
+		// result := markdown.Render(string(source), 80, 6)
+
+		// fmt.Println(string(result))
+		os.Exit(0)
 	}
 
 	// Print out type based on guess tied to JSON { and [ starting characters
