@@ -41,13 +41,6 @@ func NewPath(path string, contents string) (p *Path, err error) {
 	p.Contents = contents
 	p.Path = path
 
-	if IsJSON(p.Contents) {
-		p.Contents, err = toYAML(p.Contents)
-		if err != nil {
-			return
-		}
-	}
-
 	err = p.process()
 	if err != nil {
 		return
