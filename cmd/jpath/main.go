@@ -116,7 +116,6 @@ func main() {
 
 			for scanner.Scan() {
 				item := scanner.Text()
-				item = strings.TrimSpace(item)
 
 				lines = append(lines, item)
 			}

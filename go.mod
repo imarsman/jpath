@@ -7,6 +7,7 @@ require (
 	github.com/matryer/is v1.4.0
 	github.com/posener/complete/v2 v2.0.1-alpha.13
 	github.com/vmware-labs/yaml-jsonpath v0.3.2
+	gonum.org/v1/gonum v0.11.0
 	gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c
 )
 
@@ -16,6 +17,6 @@ require (
 	github.com/hashicorp/errwrap v1.0.0 // indirect
 	github.com/hashicorp/go-multierror v1.0.0 // indirect
 	github.com/posener/script v1.1.5 // indirect
-	golang.org/x/net v0.0.0-20190813141303-74dc4d7220e7 // indirect
-	golang.org/x/sys v0.0.0-20191026070338-33540a1f6037 // indirect
+	golang.org/x/exp v0.0.0-20220613132600-b0d781184e0d // indirect
+	golang.org/x/net v0.0.0-20211015210444-4f30a5c0130f // indirect
 )

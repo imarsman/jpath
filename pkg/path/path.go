@@ -11,6 +11,23 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+// ExpandInterfaceToMatch take interface and expand to match JSON or YAML interface structures
+func expandInterfaceToMatch(i interface{}) interface{} {
+	switch x := i.(type) {
+	case map[interface{}]interface{}:
+		m2 := map[string]interface{}{}
+		for k, v := range x {
+			m2[k.(string)] = expandInterfaceToMatch(v)
+		}
+		return m2
+	case []interface{}:
+		for i, v := range x {
+			x[i] = expandInterfaceToMatch(v)
+		}
+	}
+	return i
+}
+
 // Path a path for a document and associated properties
 type Path struct {
 	Path     string
@@ -23,6 +40,13 @@ func NewPath(path string, contents string) (p *Path, err error) {
 	p = new(Path)
 	p.Contents = contents
 	p.Path = path
+
+	if IsJSON(p.Contents) {
+		p.Contents, err = toYAML(p.Contents)
+		if err != nil {
+			return
+		}
+	}
 
 	err = p.process()
 	if err != nil {
@@ -107,6 +131,27 @@ func expandToMatch(i interface{}) interface{} {
 	return i
 }
 
+func toYAML(contents string) (output string, err error) {
+	if IsJSON(contents) {
+		var obj interface{}
+		err = json.Unmarshal([]byte(contents), &obj)
+		if err != nil {
+			return
+		}
+		obj = expandInterfaceToMatch(obj)
+		var bytes []byte
+		bytes, err = yaml.Marshal(&obj)
+		if err != nil {
+			return
+		}
+		contents = string(bytes)
+		return
+	}
+
+	output = contents
+	return
+}
+
 // subNodesStrings get parts of document that match path
 func subNodesStrings(path string, content string) (parts []string, err error) {
 	var node yaml.Node
@@ -163,6 +208,7 @@ func toYAMLNode(content string) (node yaml.Node, err error) {
 
 	err = yaml.Unmarshal([]byte(content), &node)
 	if err != nil {
+		// fmt.Println("error", err)
 		return
 	}
 
@@ -219,7 +265,7 @@ func objToYAML(obj interface{}) (j string, err error) {
 // objToJSON convert an interface to JSON
 func objToJSON(obj interface{}) (j string, err error) {
 	var bytes []byte
-	bytes, err = json.MarshalIndent(obj, "", " ")
+	bytes, err = json.MarshalIndent(obj, "", "  ")
 	if err != nil {
 		return
 	}
