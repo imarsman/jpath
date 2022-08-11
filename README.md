@@ -5,10 +5,9 @@ and print subsets of a YAML or JSON file based on a JSONPath argument. JSON inpu
 YAML. JSONPath is applied to the YAML and matches printed to stdout.  Ouput can be YAML or JSON.
 
 The package used in this project is
-[yaml-jsonpath](https://github.com/vmware-labs/yaml-jsonpathhttps://github.com/vmware-labs/yaml-jsonpath). `yaml-jsonpath`
-uses a jsonpath parser that is used to access an underlying go-yaml v3 Node structure to extract sub-document matches.
-`yaml-jsonpath` also uses a fun library [go-yit](https://github.com/dprotaso/go-yit), which adds interation to `go-yaml`
-nodes.
+[yaml-jsonpath](https://github.com/vmware-labs/yaml-jsonpath). `yaml-jsonpath` uses a jsonpath parser that is used to
+access an underlying go-yaml v3 Node structure to extract sub-document matches. `yaml-jsonpath` also uses a fun library
+[go-yit](https://github.com/dprotaso/go-yit), which adds interation to `go-yaml` nodes.
 
 The only thing that could be added is the ability to reference a node's parent. This is not a common feature for
 JSONPath implementations but I have seen it referenced using an `^` operator. Given that JSON is implemented and used
