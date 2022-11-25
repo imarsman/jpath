@@ -36,13 +36,14 @@ var Date string
 
 // Args cli args
 type Args struct {
-	JSON    bool   `arg:"-j,--json" help:"output json"`
-	YAML    bool   `arg:"-y,--yaml" help:"output yaml"`
-	Path    string `arg:"positional" help:"jsonpath to use"`
-	File    string `arg:"-f,--file" help:"file to use instead of stdin"`
-	Type    bool   `arg:"-t,--type" help:"Show inferred type of input"`
-	Summary bool   `arg:"-s,--summary" help:"Show summary"`
-	Notes   bool   `arg:"-n,--notes" help:"show jsonpath notes"`
+	JSON     bool   `arg:"-j,--json" help:"output json"`
+	YAML     bool   `arg:"-y,--yaml" help:"output yaml"`
+	NOINDENT bool   `arg:"-I,--no-indent" default:"false" help:"no indenting"`
+	Path     string `arg:"positional" help:"jsonpath to use"`
+	File     string `arg:"-f,--file" help:"file to use instead of stdin"`
+	Type     bool   `arg:"-t,--type" help:"Show inferred type of input"`
+	Summary  bool   `arg:"-s,--summary" help:"Show summary"`
+	Notes    bool   `arg:"-n,--notes" help:"show jsonpath notes"`
 }
 
 // Version get version information
@@ -74,12 +75,13 @@ func main() {
 	cmd := &complete.Command{
 		Flags: map[string]complete.Predictor{
 			// "path": predict.Nothing,
-			"yaml":    predict.Nothing,
-			"json":    predict.Nothing,
-			"file":    predict.Files("./*"),
-			"type":    predict.Nothing,
-			"summary": predict.Nothing,
-			"notes":   predict.Nothing,
+			"yaml":      predict.Nothing,
+			"json":      predict.Nothing,
+			"no-indent": predict.Nothing,
+			"file":      predict.Files("./*"),
+			"type":      predict.Nothing,
+			"summary":   predict.Nothing,
+			"notes":     predict.Nothing,
 		},
 	}
 	cmd.Complete("jpath")
@@ -167,7 +169,7 @@ func main() {
 			}
 		}
 	} else if args.JSON {
-		contents, err := path.JSON()
+		contents, err := path.JSON(args.NOINDENT)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
@@ -182,7 +184,7 @@ func main() {
 		}
 	} else {
 		// Print out json by default
-		contents, err := path.JSON()
+		contents, err := path.JSON(args.NOINDENT)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)

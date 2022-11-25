@@ -90,14 +90,14 @@ func (p *Path) YAML() (y string, err error) {
 }
 
 // JSON get JSON subset based on jsonpath
-func (p *Path) JSON() (j string, err error) {
+func (p *Path) JSON(noIndent bool) (j string, err error) {
 	if len(p.Obj) == 1 {
-		j, err = objToJSON(p.Obj[0])
+		j, err = objToJSON(noIndent, p.Obj[0])
 		if err != nil {
 			return
 		}
 	} else {
-		j, err = objToJSON(p.Obj)
+		j, err = objToJSON(noIndent, p.Obj)
 		if err != nil {
 			return
 		}
@@ -256,9 +256,13 @@ func objToYAML(obj interface{}) (j string, err error) {
 }
 
 // objToJSON convert an interface to JSON
-func objToJSON(obj interface{}) (j string, err error) {
+func objToJSON(noIndent bool, obj interface{}) (j string, err error) {
 	var bytes []byte
-	bytes, err = json.MarshalIndent(obj, "", "  ")
+	if noIndent {
+		bytes, err = json.Marshal(obj)
+	} else {
+		bytes, err = json.MarshalIndent(obj, "", "  ")
+	}
 	if err != nil {
 		return
 	}
