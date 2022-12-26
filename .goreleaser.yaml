@@ -34,6 +34,9 @@ release:
   header: |
     ## jpath ({{ .Date }})
 
+    v0.1.19
+    Added auto complete setup info
+
     v0.1.18
     Added no-indent arg for json
 
